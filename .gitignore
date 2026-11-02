@@ -1,2 +1,6 @@
 # Local-only notes, specs and plans (never published)
 docs/
+venv/
+__pycache__/
+.pytest_cache/
+*.pyd
