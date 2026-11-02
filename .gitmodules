@@ -1,0 +1,3 @@
+[submodule "extern/Tetris"]
+	path = extern/Tetris
+	url = https://github.com/emmyfong/Tetris.git
