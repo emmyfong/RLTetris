@@ -7,7 +7,7 @@ call "%VS%\VC\Auxiliary\Build\vcvars64.bat" >nul || exit /b 1
 set "PATH=%VS%\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;%VS%\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;%PATH%"
 
 cd /d "%~dp0.."
-set "PY=%CD%\.venv\Scripts\python.exe"
+set "PY=%CD%\venv\Scripts\python.exe"
 for /f "delims=" %%i in ('"%PY%" -m pybind11 --cmakedir') do set "PYBIND11_DIR=%%i"
 
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release ^
