@@ -25,16 +25,14 @@ PYBIND11_MODULE(_core, m) {
         .value("J", BlockType::J)
         .value("L", BlockType::L);
 
-    // A read-only snapshot of a piece. There is no constructor: Python only
-    // receives Blocks from an Engine, and each one is a copy.
+    // A read-only snapshot of a piece
     py::class_<Block>(m, "Block")
         .def_readonly("type", &Block::type)
         .def_readonly("rotation", &Block::rotationIdx)
         .def_readonly("row", &Block::row)
         .def_readonly("col", &Block::col);
 
-    // The getters return by value (the lambdas copy), so a Python object can
-    // never point into an Engine that has since moved on.
+    // The getters return by value
     py::class_<Engine>(m, "Engine")
         .def(py::init<unsigned int>(), py::arg("seed"))
         .def("step", &Engine::step, py::arg("action"))
