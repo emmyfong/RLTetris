@@ -1,9 +1,30 @@
+#include <cstdint>
+#include <vector>
+
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 #include "Engine.h"
 
 namespace py = pybind11;
+
+namespace {
+
+// Copy the engine's grid into a new (rows, cols) uint8 NumPy array.
+py::array_t<uint8_t> gridToArray(const Grid& grid) {
+    py::array_t<uint8_t> cells(
+        std::vector<py::ssize_t>{Settings::kBoardHeight, Settings::kBoardWidth});
+    auto view = cells.mutable_unchecked<2>();
+    for (int row = 0; row < Settings::kBoardHeight; ++row) {
+        for (int col = 0; col < Settings::kBoardWidth; ++col) {
+            view(row, col) = grid.getCell(row, col);
+        }
+    }
+    return cells;
+}
+
+}  // namespace
 
 PYBIND11_MODULE(_core, m) {
     m.doc() = "RLTetris native core";
@@ -36,6 +57,8 @@ PYBIND11_MODULE(_core, m) {
     py::class_<Engine>(m, "Engine")
         .def(py::init<unsigned int>(), py::arg("seed"))
         .def("step", &Engine::step, py::arg("action"))
+        .def_property_readonly("grid",
+                               [](const Engine& e) { return gridToArray(e.getGrid()); })
         .def_property_readonly("current_block",
                                [](const Engine& e) { return e.getCurrentBlock(); })
         .def_property_readonly("next_block",
